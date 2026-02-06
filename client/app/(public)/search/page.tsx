@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Container from "@/components/common/Container";
 import { Search as SearchIcon, TrendingUp } from "lucide-react";
@@ -17,7 +17,7 @@ interface ProductsResponse {
   total: number;
 }
 
-const TopSearchesPage = () => {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
@@ -174,6 +174,31 @@ const TopSearchesPage = () => {
       )}
     </Container>
   );
-};
+}
 
-export default TopSearchesPage;
+function SearchPageFallback() {
+  return (
+    <Container className="py-8">
+      <div className="text-center mb-12">
+        <div className="flex justify-center mb-4">
+          <SearchIcon className="h-16 w-16 text-babyshopSky animate-pulse" />
+        </div>
+        <div className="h-10 bg-gray-200 animate-pulse rounded max-w-md mx-auto mb-4" />
+        <div className="h-4 bg-gray-200 animate-pulse rounded max-w-2xl mx-auto" />
+      </div>
+      <Card className="mb-8">
+        <CardContent className="pt-6">
+          <div className="h-12 bg-gray-200 animate-pulse rounded" />
+        </CardContent>
+      </Card>
+    </Container>
+  );
+}
+
+export default function TopSearchesPage() {
+  return (
+    <Suspense fallback={<SearchPageFallback />}>
+      <SearchPageContent />
+    </Suspense>
+  );
+}
