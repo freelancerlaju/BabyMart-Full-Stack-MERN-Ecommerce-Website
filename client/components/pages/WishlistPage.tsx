@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Container from "@/components/common/Container";
 import PageBreadcrumb from "@/components/common/PageBreadcrumb";
 import { Button } from "@/components/ui/button";
@@ -32,16 +32,7 @@ const WishlistPage = () => {
     clearWishlist: clearWishlistStore,
   } = useWishlistStore();
 
-  useEffect(() => {
-    if (!isAuthenticated || !auth_token) {
-      router.push("/auth/signin");
-      return;
-    }
-
-    fetchWishlistData();
-  }, [isAuthenticated, auth_token, router]);
-
-  const fetchWishlistData = async () => {
+  const fetchWishlistData = useCallback(async () => {
     if (!auth_token) return;
 
     try {
@@ -72,7 +63,16 @@ const WishlistPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setWishlistIds, setWishlistItems]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !auth_token) {
+      router.push("/auth/signin");
+      return;
+    }
+
+    fetchWishlistData();
+  }, [isAuthenticated, auth_token, router, fetchWishlistData]);
 
   const handleRemoveItem = async (productId: string) => {
     if (!auth_token) return;

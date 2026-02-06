@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import Container from "@/components/common/Container";
 import { Search as SearchIcon, TrendingUp } from "lucide-react";
@@ -33,16 +33,7 @@ const TopSearchesPage = () => {
     "Baby Care",
   ]);
 
-  useEffect(() => {
-    const query = searchParams.get("q") || searchParams.get("search");
-    if (query) {
-      setSearchQuery(query);
-      handleSearch(query);
-    }
-  }, [searchParams]);
-
-  const handleSearch = async (query?: string) => {
-    const searchTerm = query || searchQuery;
+  const handleSearch = useCallback(async (searchTerm: string) => {
     if (!searchTerm.trim()) return;
 
     setLoading(true);
@@ -57,11 +48,19 @@ const TopSearchesPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const query = searchParams.get("q") || searchParams.get("search");
+    if (query) {
+      setSearchQuery(query);
+      handleSearch(query);
+    }
+  }, [searchParams, handleSearch]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleSearch();
+    handleSearch(searchQuery);
   };
 
   return (
@@ -72,7 +71,7 @@ const TopSearchesPage = () => {
         </div>
         <h1 className="text-4xl font-bold mb-4">Search Products</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Find exactly what you're looking for with our powerful search
+          Find exactly what you&apos;re looking for with our powerful search
           functionality.
         </p>
       </div>
@@ -125,7 +124,7 @@ const TopSearchesPage = () => {
       {searchQuery && (
         <div>
           <h2 className="text-2xl font-bold mb-6">
-            Search Results for "{searchQuery}"
+            Search Results for &quot;{searchQuery}&quot;
           </h2>
 
           {loading ? (

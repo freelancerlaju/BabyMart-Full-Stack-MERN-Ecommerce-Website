@@ -34,27 +34,6 @@ const OrderDetailsPage = () => {
   const orderId = params.id as string;
   const success = searchParams.get("success");
 
-  // Show premium feature lock if free access is disabled
-  if (!ENABLE_FREE_ACCESS) {
-    return (
-      <PremiumFeature
-        icon={FileText}
-        title="Detailed Order Tracking"
-        description="Get comprehensive order details with real-time tracking, payment status, and complete itemized breakdowns. This premium feature provides you with complete transparency and control over all your orders."
-        features={[
-          "Complete order history and details",
-          "Real-time order status tracking",
-          "Detailed payment information",
-          "Full itemized breakdown with images",
-          "Order timeline and updates",
-          "Customer support integration",
-          "Export order details as PDF",
-          "Priority customer service",
-        ]}
-      />
-    );
-  }
-
   useEffect(() => {
     const fetchOrder = async () => {
       if (!orderId || !auth_token) {
@@ -84,6 +63,27 @@ const OrderDetailsPage = () => {
     };
     fetchOrder();
   }, [orderId, auth_token, router, success]);
+
+  // Show premium feature lock if free access is disabled
+  if (!ENABLE_FREE_ACCESS) {
+    return (
+      <PremiumFeature
+        icon={FileText}
+        title="Detailed Order Tracking"
+        description="Get comprehensive order details with real-time tracking, payment status, and complete itemized breakdowns. This premium feature provides you with complete transparency and control over all your orders."
+        features={[
+          "Complete order history and details",
+          "Real-time order status tracking",
+          "Detailed payment information",
+          "Full itemized breakdown with images",
+          "Order timeline and updates",
+          "Customer support integration",
+          "Export order details as PDF",
+          "Priority customer service",
+        ]}
+      />
+    );
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {

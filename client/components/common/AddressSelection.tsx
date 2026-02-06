@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
@@ -46,14 +46,7 @@ export const AddressSelection: React.FC<AddressSelectionProps> = ({
 
   const { authUser, auth_token } = useUserStore();
 
-  // Update form when dialog opens
-  useEffect(() => {
-    if (isAddDialogOpen) {
-      resetForm();
-    }
-  }, [isAddDialogOpen, addresses.length]);
-
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setFormData({
       street: "",
       city: "",
@@ -61,7 +54,14 @@ export const AddressSelection: React.FC<AddressSelectionProps> = ({
       postalCode: "",
       isDefault: addresses.length === 0, // Auto-check if this is the first address
     });
-  };
+  }, [addresses.length]);
+
+  // Update form when dialog opens
+  useEffect(() => {
+    if (isAddDialogOpen) {
+      resetForm();
+    }
+  }, [isAddDialogOpen, resetForm]);
 
   const handleAddAddress = async (e: React.FormEvent) => {
     e.preventDefault();

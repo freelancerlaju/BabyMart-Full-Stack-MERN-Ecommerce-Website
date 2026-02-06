@@ -97,7 +97,7 @@ const TestimonialsPage = () => {
               Share Your Experience
             </h2>
             <p className="text-muted-foreground mb-6">
-              We'd love to hear about your shopping experience with us!
+              We&apos;d love to hear about your shopping experience with us!
             </p>
             <p className="text-sm text-muted-foreground">
               Contact us at{" "}

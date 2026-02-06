@@ -14,7 +14,7 @@ const AboutPage = () => {
         </div>
         <h1 className="text-4xl font-bold mb-4">About Us</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Your trusted partner for all baby essentials. We're committed to
+          Your trusted partner for all baby essentials. We&apos;re committed to
           providing quality products and exceptional service.
         </p>
       </div>
@@ -33,7 +33,7 @@ const AboutPage = () => {
             </p>
             <p className="text-muted-foreground leading-relaxed mt-4">
               We understand that choosing the right products for your baby is
-              one of the most important decisions you'll make. That's why we
+              one of the most important decisions you&apos;ll make. That&apos;s why we
               carefully curate every item in our collection, ensuring it meets
               our strict standards for quality, safety, and value.
             </p>
@@ -81,7 +81,7 @@ const AboutPage = () => {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Your satisfaction is our priority. We're here to help you find
+                Your satisfaction is our priority. We&apos;re here to help you find
                 the perfect products for your little ones.
               </p>
             </CardContent>
@@ -128,7 +128,7 @@ const AboutPage = () => {
           <CardContent className="pt-6">
             <h2 className="text-2xl font-bold mb-4">Get in Touch</h2>
             <p className="text-muted-foreground mb-6">
-              Have questions or feedback? We'd love to hear from you!
+              Have questions or feedback? We&apos;d love to hear from you!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a

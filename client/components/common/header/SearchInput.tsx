@@ -4,6 +4,7 @@ import { fetchData } from "../../../lib/api";
 import { Product } from "@/type";
 import { Loader2, Search, X } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDebounce } from "use-debounce";
 import { motion, AnimatePresence } from "motion/react";
@@ -28,7 +29,7 @@ const SearchInput = () => {
 
   const fetchFeaturedProducts = useCallback(async () => {
     try {
-      const response = await fetchData<ProductsResponse>("/products?page඿");
+      const response = await fetchData<ProductsResponse>("/products?page=1&limit=10");
       setFeaturedProducts(response.products);
     } catch (error) {
       console.error("Error fetching featured products:", error);
@@ -186,11 +187,12 @@ const SearchInput = () => {
                             className="flex items-center gap-3"
                           >
                             {product.image && (
-                              <div className="w-12 h-12 bg-gray-50 rounded flex-shrink-0 overflow-hidden">
-                                <img
+                              <div className="w-12 h-12 bg-gray-50 rounded flex-shrink-0 overflow-hidden relative">
+                                <Image
                                   src={product.image}
                                   alt={product.name}
-                                  className="object-contain w-full h-full"
+                                  fill
+                                  className="object-contain"
                                 />
                               </div>
                             )}
@@ -312,11 +314,12 @@ const SearchInput = () => {
                       className="flex items-center gap-3"
                     >
                       {product.image && (
-                        <div className="w-12 h-12 bg-gray-50 rounded flex-shrink-0 overflow-hidden">
-                          <img
+                        <div className="w-12 h-12 bg-gray-50 rounded flex-shrink-0 overflow-hidden relative">
+                          <Image
                             src={product.image}
                             alt={product.name}
-                            className="object-contain w-full h-full"
+                            fill
+                            className="object-contain"
                           />
                         </div>
                       )}

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -358,9 +359,11 @@ const ProfilePage = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600">Avatar</p>
                 {authUser.avatar ? (
-                  <img
+                  <Image
                     src={authUser.avatar}
                     alt="Avatar"
+                    width={64}
+                    height={64}
                     className="h-16 w-16 rounded-full object-cover"
                   />
                 ) : (
@@ -578,9 +581,11 @@ const ProfilePage = () => {
                     <TableRow key={item?._id}>
                       <TableCell className="flex items-center gap-2">
                         {item.image && (
-                          <img
+                          <Image
                             src={item.image}
                             alt={item.name}
+                            width={48}
+                            height={48}
                             className="h-12 w-12 object-cover rounded"
                           />
                         )}

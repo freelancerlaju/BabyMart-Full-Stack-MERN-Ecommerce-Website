@@ -1,6 +1,7 @@
 "use client";
 
 import { User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { useUserStore } from "../../../lib/store";
@@ -23,9 +24,11 @@ const UserButton = () => {
       {isAuthenticated && authUser ? (
         <span className="w-10 h-10 border rounded-full p-1 group-hover:border-babyshopSky hoverEffect">
           {authUser.avatar ? (
-            <img
+            <Image
               src={authUser.avatar}
               alt="userImage"
+              width={40}
+              height={40}
               className="h-full w-full rounded-full object-cover"
             />
           ) : (
