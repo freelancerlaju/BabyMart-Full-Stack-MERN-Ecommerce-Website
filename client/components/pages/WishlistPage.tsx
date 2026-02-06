@@ -63,7 +63,7 @@ const WishlistPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [setWishlistIds, setWishlistItems]);
+  }, [auth_token, setWishlistIds, setWishlistItems]);
 
   useEffect(() => {
     if (!isAuthenticated || !auth_token) {

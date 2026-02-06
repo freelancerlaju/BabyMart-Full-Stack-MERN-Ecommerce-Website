@@ -2,14 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { headers } from "next/headers";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-06-30.basil",
-});
-
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
+// Lazy-initialize to avoid build errors when env vars are not available
+function getStripe(): Stripe | null {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) return null;
+  return new Stripe(key, { apiVersion: "2025-06-30.basil" });
+}
 
 export async function POST(request: NextRequest) {
   try {
+    const stripe = getStripe();
+    if (!stripe) {
+      return NextResponse.json(
+        { error: "Stripe is not configured" },
+        { status: 500 }
+      );
+    }
+
+    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
     const body = await request.text();
     const headersList = await headers();
     const sig = headersList.get("stripe-signature");

@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-06-30.basil",
-});
+// Lazy-initialize Stripe to avoid "Neither apiKey nor config.authenticator provided"
+// error during build when env vars are not available
+function getStripe(): Stripe | null {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) return null;
+  return new Stripe(key, { apiVersion: "2025-06-30.basil" });
+}
 
 interface CheckoutItem {
   name: string;
@@ -16,6 +20,14 @@ interface CheckoutItem {
 
 export async function POST(request: NextRequest) {
   try {
+    const stripe = getStripe();
+    if (!stripe) {
+      return NextResponse.json(
+        { error: "Stripe is not configured" },
+        { status: 500 }
+      );
+    }
+
     const { items, successUrl, cancelUrl, customerEmail, metadata } =
       await request.json();
 
