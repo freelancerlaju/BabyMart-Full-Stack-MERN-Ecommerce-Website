@@ -1,6 +1,9 @@
 import Container from "@/components/common/Container";
 import ProductsList from "@/components/common/products/ProductsList";
 import Banner from "@/components/pages/home/Banner";
+
+// Skip static generation - fetch from API at request time (avoids build hang when Render backend is cold)
+export const dynamic = "force-dynamic";
 import CategoriesSection from "@/components/pages/home/CategoriesSection";
 import HomeBrand from "@/components/pages/home/HomeBrand";
 import BabyTravelSection from "@/components/pages/home/BabyTravelSection";

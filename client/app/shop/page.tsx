@@ -1,5 +1,8 @@
 import ShopPage from "@/components/pages/shop/ShopPageClient";
 import { fetchData } from "@/lib/api";
+
+// Skip static generation - fetch from API at request time
+export const dynamic = "force-dynamic";
 import { Brand, Category } from "@/type";
 import React from "react";
 

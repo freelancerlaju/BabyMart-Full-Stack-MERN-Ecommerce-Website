@@ -1,5 +1,8 @@
 import { payment } from "@/assets/image";
 import BackToHome from "@/components/common/buttons/BackToHome";
+
+// Skip static generation - product data fetched at request time
+export const dynamic = "force-dynamic";
 import Container from "@/components/common/Container";
 import DiscountBadge from "@/components/common/DiscountBadge";
 import PriceFormatter from "@/components/common/PriceFormatter";
