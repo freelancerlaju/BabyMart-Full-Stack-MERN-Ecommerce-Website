@@ -32,9 +32,9 @@ const allowedOrigins = [
   process.env.ADMIN_URL,
   process.env.CLIENT_URL,
   // Add production URLs
-  "https://admin.babyshop.reactbd.com",
-  "https://babyshop.reactbd.com",
-  "https://babyshop-admin.netlify.app",
+  // "https://admin.babyshop.reactbd.com",
+  // "https://babyshop.reactbd.com",
+  // "https://babyshop-admin.netlify.app",
 
   // Add localhost for development
   "http://localhost:3000",
