@@ -19,10 +19,19 @@ export const getApiConfig = (): ApiConfig => {
 
   if (isClient) {
     // Client-side: use NEXT_PUBLIC_API_URL
-    baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+    baseUrl =
+      process.env.NEXT_PUBLIC_API_URL ||
+      (process.env.NODE_ENV === "production"
+        ? "https://babymart-full-stack-mern-ecommerce-3xsp.onrender.com/api"
+        : "http://localhost:8000/api");
   } else {
     // Server-side: use API_ENDPOINT
-    baseUrl = process.env.API_ENDPOINT || "http://localhost:8000/api";
+    baseUrl =
+      process.env.API_ENDPOINT ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      (process.env.NODE_ENV === "production"
+        ? "https://babymart-full-stack-mern-ecommerce-3xsp.onrender.com/api"
+        : "http://localhost:8000/api");
   }
 
   const isProduction =
@@ -40,7 +49,7 @@ export const getApiConfig = (): ApiConfig => {
  */
 export async function fetchWithConfig<T>(
   endpoint: string,
-  options?: RequestInit
+  options?: RequestInit,
 ): Promise<T> {
   const { baseUrl } = getApiConfig();
 
@@ -69,7 +78,7 @@ export async function fetchWithConfig<T>(
 
     if (!response.ok) {
       throw new Error(
-        `API Error: ${response.status} ${response.statusText} - ${endpoint}`
+        `API Error: ${response.status} ${response.statusText} - ${endpoint}`,
       );
     }
 
@@ -100,7 +109,7 @@ export const getAuthHeaders = (token?: string): Record<string, string> => {
  * Build query string from parameters
  */
 export const buildQueryString = (
-  params: Record<string, string | number | boolean>
+  params: Record<string, string | number | boolean>,
 ): string => {
   const searchParams = new URLSearchParams();
 
