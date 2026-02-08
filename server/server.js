@@ -33,7 +33,6 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
   "http://localhost:3000",
   "http://localhost:5173",
-  "https://babymart-full-stack-mern-ecommerce-3xsp.onrender.com/api",
   "https://babyshop-ecommerce.vercel.app/"
 ].filter(Boolean);
 
