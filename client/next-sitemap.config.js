@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 const config = {
-  siteUrl: "https://babyshop.reactbd.com", // Your production domain
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://babyshop.reactbd.com",
   generateRobotsTxt: true, // Generate robots.txt file
   sitemapSize: 7000, // Maximum number of URLs per sitemap file
   changefreq: "daily", // Default change frequency for pages

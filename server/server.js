@@ -27,19 +27,13 @@ connectDB();
 
 const app = express();
 
-// Enhanced CORS configuration
+// Enhanced CORS configuration (set CLIENT_URL + ADMIN_URL in production)
 const allowedOrigins = [
   process.env.ADMIN_URL,
   process.env.CLIENT_URL,
-  // Add production URLs
-  // "https://admin.babyshop.reactbd.com",
-  // "https://babyshop.reactbd.com",
-  // "https://babyshop-admin.netlify.app",
-
-  // Add localhost for development
   "http://localhost:3000",
   "http://localhost:5173",
-].filter(Boolean); // Remove any undefined values
+].filter(Boolean);
 
 app.use(
   cors({
