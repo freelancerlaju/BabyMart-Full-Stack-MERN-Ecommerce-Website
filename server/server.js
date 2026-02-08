@@ -33,7 +33,7 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
   "http://localhost:3000",
   "http://localhost:5173",
-  "https://babyshop-ecommerce.vercel.app/"
+  "https://babyshop-ecommerce.vercel.app"
 ].filter(Boolean);
 
 app.use(
