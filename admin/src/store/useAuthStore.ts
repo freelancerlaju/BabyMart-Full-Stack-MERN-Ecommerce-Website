@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import api from "@/lib/api";
+import api, { ADMIN_API_ENDPOINTS } from "@/lib/api";
 
 type User = {
   _id: string;
@@ -51,7 +51,7 @@ const useAuthStore = create<AuthState>()(
 
       register: async (userData) => {
         try {
-          await api.post("/api/auth/register", userData);
+          await api.post(ADMIN_API_ENDPOINTS.REGISTER, userData);
 
           // if (response.data.token) {
           //   set({

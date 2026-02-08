@@ -23,7 +23,7 @@ export const getAdminApiConfig = (): AdminApiConfig => {
     import.meta.env.PROD === true;
 
   return {
-    baseURL: `${apiUrl}/api`,
+    baseURL: String(apiUrl).replace(/\/+$/, ""),
     isProduction,
   };
 };
