@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_ENDPOINT || "http://localhost:8000/api";
+  process.env.NEXT_PUBLIC_API_ENDPOINT || "https://babymart-full-stack-mern-ecommerce-3xsp.onrender.com/api";
 
 export interface OrderItem {
   productId: string;

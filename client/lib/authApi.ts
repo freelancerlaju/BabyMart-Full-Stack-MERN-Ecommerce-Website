@@ -1,4 +1,4 @@
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+const baseURL = process.env.NEXT_PUBLIC_API_URL || "https://babymart-full-stack-mern-ecommerce-3xsp.onrender.com/api";
 
 type ApiError = {
   message: string;
