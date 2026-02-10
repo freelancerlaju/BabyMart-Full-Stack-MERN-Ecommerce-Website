@@ -51,6 +51,8 @@ import {
 } from "lucide-react";
 import authApi from "@/lib/authApi";
 import Link from "next/link";
+import { addAddress, deleteAddress, updateAddress } from "@/lib/addressApi";
+import type { Address } from "@/type";
 
 const updateSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -87,7 +89,7 @@ const ProfilePage = () => {
   );
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { authUser, updateUser, logoutUser } = useUserStore();
+  const { authUser, auth_token, updateUser, logoutUser } = useUserStore();
   const { cartItems } = useCartStore();
 
   const updateForm = useForm<FormData>({
@@ -203,43 +205,21 @@ const ProfilePage = () => {
 
   const onAddressSubmit = async (data: AddressFormData) => {
     setIsLoading(true);
-    const newAddresses = [...(authUser.addresses || [])];
-    if (editingAddress && selectedAddressId !== null) {
-      // Update existing address
-      const index = parseInt(selectedAddressId);
-      newAddresses[index] = {
-        ...data,
-        _id: authUser.addresses?.[index]?._id ?? "",
-      };
-    } else {
-      // Add new address
-      newAddresses.push({ ...data, _id: "" });
-    }
-
-    // If the new/edited address is default, reset others
-    if (data.isDefault) {
-      newAddresses.forEach((addr, i) => {
-        addr.isDefault =
-          i ===
-          (editingAddress
-            ? parseInt(selectedAddressId!)
-            : newAddresses.length - 1);
-      });
+    if (!authUser || !auth_token) {
+      setIsLoading(false);
+      return;
     }
 
     try {
-      const response = await authApi.put(`/users/${authUser._id}`, {
-        addresses: newAddresses,
+      const result =
+        editingAddress && selectedAddressId
+          ? await updateAddress(authUser._id, selectedAddressId, data, auth_token)
+          : await addAddress(authUser._id, data, auth_token);
+
+      updateUser({
+        ...authUser,
+        addresses: result.addresses,
       });
-      if (response.success && response.data) {
-        updateUser({
-          _id: response.data._id,
-          name: response.data.name,
-          email: response.data.email,
-          avatar: response.data.avatar,
-          role: response.data.role,
-          addresses: response.data.addresses || [],
-        });
         toast.success("Address saved", {
           description: editingAddress
             ? "Address updated successfully."
@@ -251,9 +231,6 @@ const ProfilePage = () => {
         addressForm.reset();
         setEditingAddress(null);
         setSelectedAddressId(null);
-      } else {
-        throw new Error(response.error?.message || "Failed to save address.");
-      }
     } catch (error) {
       console.error("Address save error:", error);
       toast.error("Address save failed", {
@@ -266,33 +243,45 @@ const ProfilePage = () => {
     setIsLoading(false);
   };
 
-  const handleEditAddress = (address: AddressFormData, index: number) => {
-    console.log("Editing address:", address, "Index:", index);
-    setEditingAddress(address);
-    setSelectedAddressId(index.toString());
-    addressForm.reset(address);
+  const handleEditAddress = (address: Address) => {
+    console.log("Editing address:", address);
+    setEditingAddress({
+      street: address.street,
+      city: address.city,
+      country: address.country,
+      postalCode: address.postalCode,
+      isDefault: address.isDefault,
+    });
+    setSelectedAddressId(address._id);
+    addressForm.reset({
+      street: address.street,
+      city: address.city,
+      country: address.country,
+      postalCode: address.postalCode,
+      isDefault: address.isDefault,
+    });
     setIsAddressModalOpen(true);
   };
 
   const handleDeleteAddress = async () => {
     if (selectedAddressId === null) return;
     setIsLoading(true);
-    const newAddresses = (authUser.addresses ?? []).filter(
-      (_, i) => i !== parseInt(selectedAddressId)
-    );
+
+    if (!authUser || !auth_token) {
+      setIsLoading(false);
+      return;
+    }
     try {
-      const response = await authApi.put(`/api/users/${authUser._id}`, {
-        addresses: newAddresses,
+      const result = await deleteAddress(
+        authUser._id,
+        selectedAddressId,
+        auth_token
+      );
+
+      updateUser({
+        ...authUser,
+        addresses: result.addresses,
       });
-      if (response.success && response.data) {
-        updateUser({
-          _id: response.data._id,
-          name: response.data.name,
-          email: response.data.email,
-          avatar: response.data.avatar,
-          role: response.data.role,
-          addresses: response.data.addresses || [],
-        });
         toast.success("Address deleted", {
           description: "Address removed successfully.",
           className: "bg-green-50 text-gray-800 border-green-200",
@@ -300,9 +289,6 @@ const ProfilePage = () => {
         });
         setIsDeleteModalOpen(false);
         setSelectedAddressId(null);
-      } else {
-        throw new Error(response.error?.message || "Failed to delete address.");
-      }
     } catch (error) {
       console.error("Address delete error:", error);
       toast.error("Address deletion failed", {
@@ -413,8 +399,8 @@ const ProfilePage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {authUser.addresses.map((address, index) => (
-                    <TableRow key={index}>
+                  {authUser.addresses.map((address) => (
+                    <TableRow key={address._id}>
                       <TableCell>{address.street}</TableCell>
                       <TableCell>{address.city}</TableCell>
                       <TableCell>{address.country}</TableCell>
@@ -424,7 +410,7 @@ const ProfilePage = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => handleEditAddress(address, index)}
+                          onClick={() => handleEditAddress(address)}
                           className="text-indigo-600 hover:text-indigo-800"
                         >
                           <Edit className="h-5 w-5" />
@@ -433,7 +419,7 @@ const ProfilePage = () => {
                           variant="ghost"
                           size="icon"
                           onClick={() => {
-                            setSelectedAddressId(index.toString());
+                            setSelectedAddressId(address._id);
                             setIsDeleteModalOpen(true);
                           }}
                           className="text-red-600 hover:text-red-800"

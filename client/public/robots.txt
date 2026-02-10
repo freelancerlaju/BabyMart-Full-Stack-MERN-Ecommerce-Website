@@ -5,7 +5,7 @@ Disallow: /admin/*
 Disallow: /dashboard/*
 
 # Host
-Host: https://babyshop.reactbd.com
+Host: http://localhost:3000
 
 # Sitemaps
-Sitemap: https://babyshop.reactbd.com/sitemap.xml
+Sitemap: http://localhost:3000/sitemap.xml

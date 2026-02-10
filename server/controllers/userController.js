@@ -232,12 +232,24 @@ const updateAddress = asyncHandler(async (req, res) => {
   if (country) address.country = country;
   if (postalCode) address.postalCode = postalCode;
 
-  // If this is set as default, make other addresses non-default
-  if (isDefault) {
-    user.addresses.forEach((addr) => {
-      addr.isDefault = false;
-    });
-    address.isDefault = true;
+  // Handle default flag explicitly (true or false)
+  if (typeof isDefault === "boolean") {
+    if (isDefault) {
+      // If this is set as default, make other addresses non-default
+      user.addresses.forEach((addr) => {
+        addr.isDefault = false;
+      });
+      address.isDefault = true;
+    } else {
+      // Allow unsetting default; ensure at least one default remains if any addresses exist
+      address.isDefault = false;
+      if (
+        user.addresses.length > 0 &&
+        !user.addresses.some((addr) => addr.isDefault)
+      ) {
+        user.addresses[0].isDefault = true;
+      }
+    }
   }
 
   await user.save();

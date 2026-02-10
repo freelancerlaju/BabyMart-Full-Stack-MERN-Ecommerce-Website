@@ -44,7 +44,7 @@ export const AddressSelection: React.FC<AddressSelectionProps> = ({
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const { authUser, auth_token } = useUserStore();
+  const { authUser, auth_token, updateUser } = useUserStore();
 
   const resetForm = useCallback(() => {
     setFormData({
@@ -71,6 +71,7 @@ export const AddressSelection: React.FC<AddressSelectionProps> = ({
     try {
       const result = await addAddress(authUser._id, formData, auth_token);
       onAddressesUpdate(result.addresses);
+      updateUser({ ...authUser, addresses: result.addresses });
       toast.success(result.message);
       setIsAddDialogOpen(false);
       resetForm();
@@ -96,6 +97,7 @@ export const AddressSelection: React.FC<AddressSelectionProps> = ({
         auth_token
       );
       onAddressesUpdate(result.addresses);
+      updateUser({ ...authUser, addresses: result.addresses });
       toast.success(result.message);
       setIsEditDialogOpen(false);
       setEditingAddress(null);
@@ -116,6 +118,7 @@ export const AddressSelection: React.FC<AddressSelectionProps> = ({
     try {
       const result = await deleteAddress(authUser._id, addressId, auth_token);
       onAddressesUpdate(result.addresses);
+      updateUser({ ...authUser, addresses: result.addresses });
       toast.success(result.message);
     } catch (error) {
       toast.error(
